@@ -4,7 +4,19 @@ extern crate rustc_serialize;
 use rustc_serialize::json;
 use std::io::Read;
 use std::sync::{Arc, Mutex};
-use nickel::Nickel;
+use std::collections::BTreeMap;
+use nickel::{Nickel, JsonBody, HttpRouter, MediaType};
+
+#[derive(RustcDecodable, RustcEncodable)]
+struct TrafficData {
+    data: i32,
+}
+
+impl ToJson for TrafficData {
+    fn to_json(&self) -> Json {
+        let mut map = BTreeMap::new();
+    }
+}
 
 fn generator() -> &'static str {
     "It works."
