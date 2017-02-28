@@ -1,0 +1,9 @@
+[package]
+name = "traffic_generator"
+version = "0.1.0"
+authors = ["Emma Ramirez <ramirez.emma.g@gmail.com>"]
+
+[dependencies]
+hyper = "*"
+nickel = "*"
+rustc_serialize = "*"
