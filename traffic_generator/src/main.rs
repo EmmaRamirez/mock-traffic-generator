@@ -52,8 +52,7 @@ fn main() {
         let traffic_data = TrafficData {
             data: rng.gen::<i32>()
         };
-        res.set(MediaType::Json);
-        r#"{ "data": "traffic_data" }"#
+        traffic_data.to_json()
     });
 
     server.listen("127.0.0.1:6767").unwrap();
