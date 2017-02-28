@@ -6,4 +6,5 @@ authors = ["Emma Ramirez <ramirez.emma.g@gmail.com>"]
 [dependencies]
 hyper = "*"
 nickel = "*"
-rustc_serialize = "*"
+rustc-serialize = "*"
+rand = "*"
