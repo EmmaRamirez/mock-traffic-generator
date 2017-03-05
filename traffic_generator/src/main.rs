@@ -27,7 +27,6 @@ impl ToJson for TrafficData {
     }
 }
 
-
 fn main() {
     let mut server = Nickel::new();
 
