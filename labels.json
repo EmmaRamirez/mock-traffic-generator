@@ -1,0 +1,98 @@
+[
+  {
+    "name": "bug: build",
+    "color": "#ee0701"
+  },
+  {
+    "name": "bug: dependency",
+    "color": "#ee0701"
+  },
+  {
+    "name": "bug: styling",
+    "color": "#ee0701"
+  },
+  {
+    "name": "bug",
+    "color": "#ee0701"
+  },
+  {
+    "name": "meta: considering",
+    "color": "#cc317c"
+  },
+  {
+    "name": "meta: discussion",
+    "color": "#cc317c"
+  },
+  {
+    "name": "meta: question",
+    "color": "#cc317c"
+  },
+  {
+    "name": "meta: rfc",
+    "color": "#cc317c"
+  },
+  {
+    "name": "greenkeeper",
+    "color": "#00c775"
+  },
+  {
+    "name": "documentation",
+    "color": "#bfdadc"
+  },
+  {
+    "name": "design",
+    "color": "#5319e7"
+  },
+  {
+    "name": "css",
+    "color": "#5319e7"
+  },
+  {
+    "name": "component",
+    "color": "#1d76db"
+  },
+  {
+    "name": "chore",
+    "color": "#fef2c0"
+  },
+  {
+    "name": "code: quality",
+    "color": "#22ffcc"
+  },
+  {
+    "name": "code: architecture",
+    "color": "#22ffcc"
+  },
+  {
+    "name": "code: refactor",
+    "color": "#22ffcc"
+  },
+  {
+    "name": "tests",
+    "color": "#006b75"
+  },
+  {
+    "name": "needs-tests",
+    "color": "#006b75"
+  },
+  {
+    "name": "on-hold",
+    "color": "#cccccc"
+  },
+  {
+    "name": "invalid",
+    "color": "#cccccc"
+  },
+  {
+    "name": "http",
+    "color": "#1d76db"
+  },
+  {
+    "name": "build",
+    "color": "#c5def5"
+  },
+  {
+    "name": "coverage",
+    "color": "#c5def5"
+  }
+]
