@@ -5,7 +5,7 @@
   </head>
   <body>
     <script>
-      const socket = new WebSocket('ws://127.0.0.1:6767', 'traffic');
+      const socket = new WebSocket('ws://127.0.0.1:6767');
       socket.onmessage = (evt) => {
         let recieved = document.getElementId('recieved');
         let br = document.createElement('br');
@@ -13,20 +13,11 @@
         recieved.appendChild(br);
         recieved.appendChild(text);
       }
-      function send(element) {
-        let input = document.getElementId(element);
-        socket.send(input.value);
-        input.value = '';
-      }
     </script>
     <section>
       <p id='recieved'>
         <strong>Recieved Messages:</strong>
       </p>
-      <form onsubmit='send("message"); return false;'>
-        <input type='text' id='message'>
-        <input type='submit' value='Send'>
-      </form>
     </section>
   </body>
 </html>
