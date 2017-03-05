@@ -23,21 +23,9 @@ impl ToJson for TrafficData {
     }
 }
 
-fn enable_cors<'mw>(_req: &mut Request, mut res: Response<'mw>) -> MiddlewareResult<'mw> {
-    res.set(AccessControlAllowOrigin::Any);
-    res.set(AccessControlAllowHeaders(vec![
-            "Origin".into(),
-            "X-Requested-With".into(),
-            "Content-Type".into(),
-            "Accept".into()
-        ]));
-    res.next_middleware();
-}
-
 fn main() {
     let mut server = Nickel::new();
 
-    server.utilize(enable_cors);
     server.get("**", middleware!("CORS"));
 
     server.post("/", middleware! { |request, response|
