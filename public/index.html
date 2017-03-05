@@ -5,7 +5,7 @@
   </head>
   <body>
     <script>
-      const socket = new WebSocket('ws://127.0.0.1:6767');
+      const socket = new WebSocket('ws://127.0.0.1:3012');
       socket.onmessage = (evt) => {
         let recieved = document.getElementId('recieved');
         let br = document.createElement('br');

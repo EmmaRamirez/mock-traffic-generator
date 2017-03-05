@@ -2,6 +2,7 @@
 extern crate hyper;
 extern crate rustc_serialize;
 extern crate rand;
+extern crate chrono;
 // extern crate websocket;
 extern crate ws;
 extern crate env_logger;
@@ -10,7 +11,9 @@ use rustc_serialize::json::{Json, ToJson};
 use rand::Rng;
 use std::collections::BTreeMap;
 use std::thread;
-use std::mem;
+use std::str::from_utf8;
+use std::fmt::{self, Debug};
+use chrono::prelude::*;
 // use hyper::header::{AccessControlAllowOrigin, AccessControlAllowHeaders};
 use nickel::status::StatusCode;
 use nickel::{Nickel, StaticFilesHandler, JsonBody, HttpRouter};
@@ -19,9 +22,9 @@ use nickel::{Nickel, StaticFilesHandler, JsonBody, HttpRouter};
 // use websocket::header::WebSocketProtocol;
 use ws::{connect, listen, CloseCode, Sender, Handler, Message, Result, Handshake};
 
-#[derive(RustcDecodable, RustcEncodable)]
 struct TrafficData {
     data: i32,
+    time: DateTime<UTC>,
 }
 
 impl ToJson for TrafficData {
@@ -35,10 +38,12 @@ impl ToJson for TrafficData {
 fn generate_traffic_data() -> Json {
     let mut rng = rand::thread_rng();
     let traffic_data = TrafficData {
-        data: rng.gen_range::<i32>(0, 3000)
+        data: rng.gen_range::<i32>(0, 3000),
+        time: UTC::now(),
     };
     traffic_data.to_json()
 }
+
 
 struct Server {
     out: Sender,
@@ -68,16 +73,11 @@ impl Handler for Server {
 
 fn main() {
 
-    let mut nickelServer = Nickel::new();
+    let mut nickel_server = Nickel::new();
 
-    nickelServer.utilize(StaticFilesHandler::new("public"));
+    nickel_server.utilize(StaticFilesHandler::new("public"));
 
-    nickelServer.get("/", middleware! { |request, response|
-        let traffic_data = try_with!(response, {
-            request.json_as::<TrafficData>().map_err(|e| (StatusCode::BadRequest, e))
-        });
-        format!("{}", traffic_data.data);
-    });
+    nickel_server.listen("127.0.0.1:3333").unwrap();
 
     env_logger::init().unwrap();
 
