@@ -12,11 +12,10 @@ exclude = [
 ]
 
 [dependencies]
-hyper = "*"
-rustc-serialize = "*"
-rand = "*"
-ws = "*"
-env_logger = "*"
+rustc-serialize = "0.3.22"
+rand = "0.3.15"
+ws = "0.6.0"
+env_logger = "0.4.1"
 
 [dependencies.chrono]
 version = "0.2.0"
