@@ -5,12 +5,11 @@ authors = ["Emma Ramirez <ramirez.emma.g@gmail.com>"]
 
 [dependencies]
 hyper = "*"
-nickel = "*"
 rustc-serialize = "*"
 rand = "*"
 ws = "*"
 env_logger = "*"
-chrono = "*"
 
 [dependencies.chrono]
+version = "*"
 features = ["rustc-serialize"]
