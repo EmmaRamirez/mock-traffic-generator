@@ -1,51 +1,35 @@
-#[macro_use]
-extern create serde_derive;
-
-extern crate hyper;
 extern crate rustc_serialize;
 extern crate rand;
 extern crate ws;
 extern crate env_logger;
 extern crate chrono;
-extern crate serde_json;
 
 use rustc_serialize::json::{Json, ToJson};
 use rand::Rng;
-use std::collections::BTreeMap;
 use std::thread;
-use std::str::from_utf8;
-use std::fmt::{self, Debug};
 use chrono::{DateTime, UTC};
-use ws::{connect, listen, CloseCode, Sender, Handler, Message, Result, Handshake};
-
-struct TrafficTime(pub DateTime<UTC>);
+use ws::{connect, listen, CloseCode, Sender, Handler};
 
 // We create a struct for TrafficData that accepts a rate and time
-#[derive(Serialize, Deserialize, Debug)]
 pub struct TrafficData {
     pub rate: i32,
-    pub time: TrafficTime,
+    pub time: DateTime<UTC>,
 }
 
 // We create a to_json for for TrafficData.time
 // A bit of clunkiness is attributable here to requiring
 // a newtype for our trait, as well as serde/rustc-serialize being both present
 // We could also use this to create a custom serialization format
-impl ToJson for TrafficTime {
-    fn to_json(&self) -> Json {
-        let serialized = serde_json::to_string(&self).unwrap();
-        serialized
-    }
-}
+// impl ToJson for TrafficTime {
+//     fn to_json(&self) -> Json {
+//         Json::String(format!("{}", self))
+//     }
+// }
 
-// We implement a .to_json() method that create a tree from the struct
-// then we map the values and return Json from the Object
+// We implement a .to_json() method that returns json from our string
 impl ToJson for TrafficData {
     fn to_json(&self) -> Json {
-        let mut map = BTreeMap::new();
-        map.insert("rate".to_string(), self.rate.to_json());
-        map.insert("time".to_string(), self.time.to_json());
-        Json::Object(map)
+        Json::String(format!(r#"{{ "rate": {}, "time": {} }}"#, self.rate, self.time))
     }
 }
 

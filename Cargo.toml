@@ -17,10 +17,7 @@ rustc-serialize = "*"
 rand = "*"
 ws = "*"
 env_logger = "*"
-serde = "0.9"
-serde_derive = "0.9"
-serde_json = "0.9"
 
 [dependencies.chrono]
 version = "0.2.0"
-features = ["serde"]
+features = ["rustc-serialize"]
