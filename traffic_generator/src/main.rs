@@ -8,7 +8,7 @@ use rand::Rng;
 use std::collections::BTreeMap;
 // use hyper::header::{AccessControlAllowOrigin, AccessControlAllowHeaders};
 use nickel::status::StatusCode;
-use nickel::{Nickel, Mountable, StaticFilesHandler, JsonBody, HttpRouter};
+use nickel::{Nickel, StaticFilesHandler, JsonBody, HttpRouter};
 
 #[derive(RustcDecodable, RustcEncodable)]
 struct TrafficData {
