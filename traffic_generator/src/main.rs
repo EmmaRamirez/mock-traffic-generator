@@ -6,17 +6,16 @@ extern crate rand;
 extern crate ws;
 extern crate env_logger;
 
-use rustc_serialize::json::{Json, ToJson, decode, encode};
+use rustc_serialize::json::{Json, ToJson};
 use rand::Rng;
 use std::collections::BTreeMap;
-use std::fmt::Display;
 // use hyper::header::{AccessControlAllowOrigin, AccessControlAllowHeaders};
 use nickel::status::StatusCode;
 use nickel::{Nickel, StaticFilesHandler, JsonBody, HttpRouter};
 // use websocket::{Server, Message, Sender, Reciever};
 // use websocket::message::Type;
 // use websocket::header::WebSocketProtocol;
-use ws::{connect, listen, Handler, Sender, Handshake, Result, Message, CloseCode};
+use ws::{connect, CloseCode};
 
 #[derive(RustcDecodable, RustcEncodable)]
 struct TrafficData {
@@ -31,7 +30,7 @@ impl ToJson for TrafficData {
     }
 }
 
-fn generateTrafficData() -> Json {
+fn generate_traffic_data() -> Json {
     let mut rng = rand::thread_rng();
     let traffic_data = TrafficData {
         data: rng.gen_range::<i32>(0, 3000)
@@ -54,8 +53,8 @@ fn main() {
         format!("{}", traffic_data.data);
     });
 
-    server.get("/traffic", middleware! { |_, mut res|
-        generateTrafficData()
+    server.get("/traffic", middleware! { |_, res|
+        generate_traffic_data()
     });
 
     if let Err(error) = connect("127.0.0.1:6767", |out| {
