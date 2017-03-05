@@ -23,14 +23,15 @@ use nickel::{Nickel, StaticFilesHandler, JsonBody, HttpRouter};
 use ws::{connect, listen, CloseCode, Sender, Handler, Message, Result, Handshake};
 
 struct TrafficData {
-    data: i32,
+    rate: i32,
     time: DateTime<UTC>,
 }
 
 impl ToJson for TrafficData {
     fn to_json(&self) -> Json {
         let mut map = BTreeMap::new();
-        map.insert("data".to_string(), self.data.to_json());
+        map.insert("rate".to_string(), self.rate.to_json());
+        map.insert("time".to_string(), self.time.to_json());
         Json::Object(map)
     }
 }
@@ -38,7 +39,7 @@ impl ToJson for TrafficData {
 fn generate_traffic_data() -> Json {
     let mut rng = rand::thread_rng();
     let traffic_data = TrafficData {
-        data: rng.gen_range::<i32>(0, 3000),
+        rate: rng.gen_range::<i32>(0, 3000),
         time: UTC::now(),
     };
     traffic_data.to_json()

@@ -11,3 +11,6 @@ rand = "*"
 ws = "*"
 env_logger = "*"
 chrono = "*"
+
+[dependencies.chrono]
+features = ["rustc-serialize"]
