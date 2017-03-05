@@ -1,7 +1,15 @@
 [package]
 name = "traffic_generator"
 version = "0.1.0"
+description = "a mock data generator with sockets"
+license = "MIT"
+homepage = "https://github.com/BeStateless/mock-traffic-generator"
+respository = "https://github.com/BeStateless/mock-traffic-generator"
 authors = ["Emma Ramirez <ramirez.emma.g@gmail.com>"]
+exclude = [
+  "labels.json",
+  ".travis.yml"
+]
 
 [dependencies]
 hyper = "*"
@@ -9,7 +17,10 @@ rustc-serialize = "*"
 rand = "*"
 ws = "*"
 env_logger = "*"
+serde = "0.9"
+serde_derive = "0.9"
+serde_json = "0.9"
 
 [dependencies.chrono]
-version = "*"
-features = ["rustc-serialize"]
+version = "0.2.0"
+features = ["serde"]
