@@ -2,17 +2,21 @@
 extern crate hyper;
 extern crate rustc_serialize;
 extern crate rand;
-extern crate websocket;
+// extern crate websocket;
+extern crate ws;
+extern crate env_logger;
 
-use rustc_serialize::json::{Json, ToJson};
+use rustc_serialize::json::{Json, ToJson, decode, encode};
 use rand::Rng;
 use std::collections::BTreeMap;
+use std::fmt::Display;
 // use hyper::header::{AccessControlAllowOrigin, AccessControlAllowHeaders};
 use nickel::status::StatusCode;
 use nickel::{Nickel, StaticFilesHandler, JsonBody, HttpRouter};
-use websocket::{Server, Message, Sender, Reciever};
-use websocket::message::Type;
-use websocket::header::WebSocketProtocol;
+// use websocket::{Server, Message, Sender, Reciever};
+// use websocket::message::Type;
+// use websocket::header::WebSocketProtocol;
+use ws::{connect, listen, Handler, Sender, Handshake, Result, Message, CloseCode};
 
 #[derive(RustcDecodable, RustcEncodable)]
 struct TrafficData {
@@ -27,7 +31,18 @@ impl ToJson for TrafficData {
     }
 }
 
+fn generateTrafficData() -> Json {
+    let mut rng = rand::thread_rng();
+    let traffic_data = TrafficData {
+        data: rng.gen_range::<i32>(0, 3000)
+    };
+    traffic_data.to_json()
+}
+
 fn main() {
+
+    env_logger::init().unwrap();
+
     let mut server = Nickel::new();
 
     server.utilize(StaticFilesHandler::new("public"));
@@ -40,61 +55,25 @@ fn main() {
     });
 
     server.get("/traffic", middleware! { |_, mut res|
-        let mut rng = rand::thread_rng();
-        let traffic_data = TrafficData {
-            data: rng.gen_range::<i32>(0, 3000)
-        };
-        traffic_data.to_json()
+        generateTrafficData()
     });
 
-    for connection in server {
-        thread::spawn(move || {
-            let request = connection.unwrap().read_request().unwrap();
-            let headers = request.headers.clone();
+    if let Err(error) = connect("127.0.0.1:6767", |out| {
 
-            request.validate().unwrap();
+        if let Err(_) = out.send("Hello.") {
+            println!("Websocket failed @ initial message");
+        } else {
+            println!("Client sent message");
+        }
 
-            let mut response = request.accept();
-
-            if let Some(&WebSocketProtocol(ref protocols)) = headers.get() {
-                if protocols.contains(&("traffic".to_string())) {
-                    response.headers.set(WebSocketProtocol(vec!["traffic".to_string()]));
-                }
-            }
-
-            let mut client = response.send().unwrap();
-
-            let ip = client.get_mut_sender()
-                        .get_mut()
-                        .peer_addr()
-                        .unwrap();
-
-            println!("Connection from {}", ip);
-
-            let message: Message = Message::text("Hello".to_string());
-            client.send_message(&message).unwrap();
-
-            let (mut sender, mut reciever) = client.split();
-
-            for message in reciever.incoming_messages() {
-                let message: Message = message.unwrap();
-
-                match message.opcode {
-                    Type::Close => {
-                        let message = Message::close();
-                        sender.send_message(&message).unwrap();
-                        println!("Client {} disconnected", ip);
-                        return;
-                    },
-                    Type::Ping => {
-                        let message = Message::pong(message.payload);
-                        sender.send_message(&message).unwrap();
-                    }
-                    _ => sender.send_message(&message).unwrap(),
-                }
-            }
-        })
+        move |msg| {
+            println!("Client recieved: {}", msg);
+            out.close(CloseCode::Normal)
+        }
+    }) {
+        println!("Failed to create Websocket due to: {:?}", error);
     }
+
 
     server.listen("127.0.0.1:6767").unwrap();
 }
